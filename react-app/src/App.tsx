@@ -1,19 +1,18 @@
 import { useState } from "react";
-import Alert from "./components/Alert";
-import Button from "./components/Button";
+// import Alert from "./components/Alert";
+// import Button from "./components/Button";
 
 function App() {
-  const [alertVisible, setAlertVisibility] = useState(false);
-  return (
-    <div>
-      {alertVisible && (
-        <Alert onClose={() => setAlertVisibility(false)}>My alert</Alert>
-      )}
-      <Button color="danger" onClick={() => setAlertVisibility(true)}>
-        Push <span>Me</span>
-      </Button>
-    </div>
-  );
+  const [game, setGame] = useState({
+    id: 1,
+    player: {
+      name: "John",
+    },
+  });
+
+  const handleClick = () => {
+    setGame({ ...game, player: { ...game.player, name: "Bob" } });
+  };
 }
 
 export default App;
