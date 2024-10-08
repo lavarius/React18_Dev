@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-
+import "./ListGroup.css";
 interface Props {
   children: ReactNode;
   onClose: () => void;
