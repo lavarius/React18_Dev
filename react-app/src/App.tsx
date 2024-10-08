@@ -1,9 +1,10 @@
 import Button from "./components/Button/Button";
+import ExpandableText from "./components/ExpandableText";
 
 function App() {
   return (
     <div>
-      <Button onClick={() => {}}>My Button</Button>
+      <ExpandableText>Hello World</ExpandableText>
     </div>
   );
 }
