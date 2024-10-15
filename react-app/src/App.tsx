@@ -44,7 +44,7 @@ function App() {
 
     // Call the Server to persist the changes
     try {
-      const res = await axios.delete(
+      await axios.delete(
         "https://jsonplaceholder.typicode.com/users/" + user.id
       );
     } catch (err) {
@@ -56,7 +56,6 @@ function App() {
   const addUser = async () => {
     const originalUsers = [...users];
     const newUser = { id: 0, name: "Mark" };
-
     setUsers([newUser, ...users]);
 
     //update the server
@@ -65,14 +64,28 @@ function App() {
         "https://jsonplaceholder.typicode.com/users",
         newUser
       );
-
       //update local state with server response
       setUsers([res.data, ...users]);
-      // ({data: savedUser }) => setUsers([savedUser, ...users])
-      // alias to property
     } catch (err) {
       setError((err as AxiosError).message);
       // Revert to original state if request fails
+      setUsers(originalUsers);
+    }
+  };
+
+  const updateUser = async (user: User) => {
+    const originalUsers = [...users];
+    const updatedUser = { ...user, name: user.name + "!" };
+    // update UI
+    setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
+
+    try {
+      await axios.patch(
+        "https://jsonplaceholder.typicode.com/users/" + user.id,
+        updatedUser
+      );
+    } catch (err) {
+      setError((err as AxiosError).message);
       setUsers(originalUsers);
     }
   };
@@ -91,12 +104,20 @@ function App() {
             className="list-group-item d-flex justify-content-between"
           >
             {user.name}
-            <button
-              className="btn btn-outline-danger"
-              onClick={() => deleteUser(user)}
-            >
-              Delete
-            </button>
+            <div>
+              <button
+                className="btn btn-outline-secondary mx-1"
+                onClick={() => updateUser(user)}
+              >
+                Update
+              </button>
+              <button
+                className="btn btn-outline-danger"
+                onClick={() => deleteUser(user)}
+              >
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
