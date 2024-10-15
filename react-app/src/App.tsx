@@ -53,10 +53,37 @@ function App() {
     }
   };
 
+  const addUser = async () => {
+    const originalUsers = [...users];
+    const newUser = { id: 0, name: "Mark" };
+
+    setUsers([newUser, ...users]);
+
+    //update the server
+    try {
+      const res = await axios.post(
+        "https://jsonplaceholder.typicode.com/users",
+        newUser
+      );
+
+      //update local state with server response
+      setUsers([res.data, ...users]);
+      // ({data: savedUser }) => setUsers([savedUser, ...users])
+      // alias to property
+    } catch (err) {
+      setError((err as AxiosError).message);
+      // Revert to original state if request fails
+      setUsers(originalUsers);
+    }
+  };
+
   return (
     <>
       {error && <p className="text-danger">{error}</p>}
       {isLoading && <div className="spinner-border"></div>}
+      <button className="mb-3 btn btn-primary" onClick={addUser}>
+        Add User
+      </button>
       <ul className="list-group">
         {users.map((user) => (
           <li
