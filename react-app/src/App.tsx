@@ -1,28 +1,20 @@
 import { useEffect, useState } from "react";
 import apiClient, { AxiosError, CanceledError } from "./services/api-client";
+import userService, { User } from "./services/user-service";
 
-interface User {
-  id: number;
-  name: string;
-}
 function App() {
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    const controller = new AbortController();
-
+    const { request, cancel } = userService.getAllUsers();
     const fetchUsers = async () => {
       try {
         setLoading(true);
-        const res = await apiClient.get<User[]>("/users", {
-          signal: controller.signal,
-        });
-        {
-          setUsers(res.data);
-          setLoading(false);
-        }
+        const res = await request;
+        setUsers(res.data);
+        setLoading(false);
       } catch (err) {
         if (err instanceof CanceledError) return;
         setError((err as AxiosError).message);
@@ -31,7 +23,9 @@ function App() {
     };
     fetchUsers();
 
-    return () => controller.abort();
+    return () => {
+      cancel();
+    };
   }, []);
 
   const deleteUser = async (user: User) => {
