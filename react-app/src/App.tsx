@@ -1,14 +1,25 @@
-import { useState } from "react";
-import Alert from "./components/Alert";
-import Button from "./components/Button/Button";
-import ExpandableText from "./components/ExpandableText";
-import Form from "./components/Form";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
+interface User {
+  id: number;
+  name: string;
+}
 function App() {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    axios
+      .get<User[]>("https://jsonplaceholder.typicode.com/users")
+      .then((res) => setUsers(res.data));
+  }),
+    [];
   return (
-    <div>
-      <Form />
-    </div>
+    <ul>
+      {users.map((user) => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
   );
 }
 
