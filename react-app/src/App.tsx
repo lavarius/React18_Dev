@@ -34,6 +34,25 @@ function App() {
 
     return () => controller.abort();
   }, []);
+
+  const deleteUser = async (user: User) => {
+    // restore when error
+    const originalUsers = [...users];
+
+    // Update the UI
+    setUsers(users.filter((u) => u.id !== user.id));
+
+    // Call the Server to persist the changes
+    try {
+      const res = await axios.delete(
+        "https://jsonplaceholder.typicode.com/users/" + user.id
+      );
+    } catch (err) {
+      setError((err as AxiosError).message);
+      setUsers(originalUsers);
+    }
+  };
+
   return (
     <>
       {error && <p className="text-danger">{error}</p>}
@@ -45,7 +64,12 @@ function App() {
             className="list-group-item d-flex justify-content-between"
           >
             {user.name}
-            <button className="btn btn-outline-danger">Delete</button>
+            <button
+              className="btn btn-outline-danger"
+              onClick={() => deleteUser(user)}
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
