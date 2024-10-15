@@ -40,7 +40,10 @@ function App() {
       {isLoading && <div className="spinner-border"></div>}
       <ul>
         {users.map((user) => (
-          <li key={user.id}>{user.name}</li>
+          <li key={user.id}>
+            {user.name}{" "}
+            <button className="btn btn-outline-danger">Delete</button>
+          </li>
         ))}
       </ul>
     </>
