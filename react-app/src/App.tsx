@@ -37,7 +37,7 @@ function App() {
 
     // Call the Server to persist the changes
     try {
-      await apiClient.delete("/users/" + user.id);
+      await userService.deleteUser(user.id);
     } catch (err) {
       setError((err as AxiosError).message);
       setUsers(originalUsers);
