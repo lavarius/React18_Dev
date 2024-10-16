@@ -8,7 +8,7 @@ function App() {
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    const { request, cancel } = userService.getAllUsers();
+    const { request, cancel } = userService.getAll<User>();
     const fetchUsers = async () => {
       try {
         setLoading(true);
@@ -37,7 +37,7 @@ function App() {
 
     // Call the Server to persist the changes
     try {
-      await userService.deleteUser(user.id);
+      await userService.delete(user.id);
     } catch (err) {
       setError((err as AxiosError).message);
       setUsers(originalUsers);
@@ -51,7 +51,7 @@ function App() {
 
     //update the server
     try {
-      const res = await userService.createUser(newUser);
+      const res = await userService.create(newUser);
       setUsers([res.data, ...users]);
     } catch (err) {
       setError((err as AxiosError).message);
@@ -66,7 +66,7 @@ function App() {
     setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
 
     try {
-      await userService.updateUser(updatedUser);
+      await userService.update(updatedUser);
     } catch (err) {
       setError((err as AxiosError).message);
       setUsers(originalUsers);
