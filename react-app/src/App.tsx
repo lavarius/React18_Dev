@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import apiClient, { AxiosError, CanceledError } from "./services/api-client";
+import { AxiosError, CanceledError } from "./services/api-client";
 import userService, { User } from "./services/user-service";
 
 function App() {
@@ -51,12 +51,10 @@ function App() {
 
     //update the server
     try {
-      const res = await apiClient.post("/users", newUser);
-      //update local state with server response
+      const res = await userService.createUser(newUser);
       setUsers([res.data, ...users]);
     } catch (err) {
       setError((err as AxiosError).message);
-      // Revert to original state if request fails
       setUsers(originalUsers);
     }
   };
@@ -68,7 +66,7 @@ function App() {
     setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
 
     try {
-      await apiClient.patch("/users/" + user.id, updatedUser);
+      await userService.updateUser(updatedUser);
     } catch (err) {
       setError((err as AxiosError).message);
       setUsers(originalUsers);

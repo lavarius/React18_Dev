@@ -18,6 +18,13 @@ class UserService {
         return apiClient.delete("/users/" + id);
     }
     
+    createUser(user: User) {
+        return apiClient.post("/users", user)
+    }
+
+    updateUser(user: User) {
+        return apiClient.patch("/users/" + user.id, user)
+    }
 
 }
 
